@@ -26,6 +26,7 @@ const els = {
   nextMonth: document.getElementById("nextMonth"),
   detailTitle: document.getElementById("detailTitle"),
   detailTotal: document.getElementById("detailTotal"),
+  countAdjust: document.getElementById("countAdjust"),
   recordList: document.getElementById("recordList"),
   exportButton: document.getElementById("exportButton"),
   importButton: document.getElementById("importButton"),
@@ -107,18 +108,24 @@ function recordsForDate(dateKey) {
     .sort((a, b) => String(a.createdAt || "").localeCompare(String(b.createdAt || "")));
 }
 
-function makeRecord(now) {
+function makeRecord(now, options = {}) {
   const randomSource = window.crypto || window.msCrypto;
   const randomPart = randomSource && randomSource.getRandomValues
     ? randomSource.getRandomValues(new Uint32Array(1))[0].toString(36)
     : Math.random().toString(36).slice(2);
 
-  return {
+  const record = {
     id: `${Date.now()}-${randomPart}`,
-    date: localDateKey(now),
+    date: options.dateKey || localDateKey(now),
     time: localTime(now),
     createdAt: localIsoWithOffset(now)
   };
+
+  if (options.manual) {
+    record.manual = true;
+  }
+
+  return record;
 }
 
 function showToast(message) {
@@ -137,6 +144,28 @@ function addRecord() {
   state.selectedDate = record.date;
   render();
   showToast("記録しました");
+}
+
+function addManualRecordForSelectedDate() {
+  const record = makeRecord(new Date(), {
+    dateKey: state.selectedDate,
+    manual: true
+  });
+  state.records.push(record);
+  saveRecords();
+  render();
+}
+
+function removeLatestRecordForSelectedDate() {
+  const selectedRecords = recordsForDate(state.selectedDate);
+  const latest = selectedRecords[selectedRecords.length - 1];
+  if (!latest) {
+    return;
+  }
+
+  state.records = state.records.filter((record) => record.id !== latest.id);
+  saveRecords();
+  render();
 }
 
 function deleteRecord(id) {
@@ -222,7 +251,29 @@ function renderDetail() {
   const selectedRecords = recordsForDate(state.selectedDate);
   els.detailTitle.textContent = formatShortDate(state.selectedDate);
   els.detailTotal.textContent = `合計 ${selectedRecords.length}回`;
+  els.countAdjust.innerHTML = "";
   els.recordList.innerHTML = "";
+
+  const minusButton = document.createElement("button");
+  minusButton.type = "button";
+  minusButton.className = "adjust-button";
+  minusButton.textContent = "−";
+  minusButton.setAttribute("aria-label", "この日の回数を1回減らす");
+  minusButton.disabled = selectedRecords.length === 0;
+  minusButton.addEventListener("click", removeLatestRecordForSelectedDate);
+
+  const count = document.createElement("span");
+  count.className = "adjust-count";
+  count.textContent = `${selectedRecords.length}回`;
+
+  const plusButton = document.createElement("button");
+  plusButton.type = "button";
+  plusButton.className = "adjust-button";
+  plusButton.textContent = "+";
+  plusButton.setAttribute("aria-label", "この日の回数を1回増やす");
+  plusButton.addEventListener("click", addManualRecordForSelectedDate);
+
+  els.countAdjust.append(minusButton, count, plusButton);
 
   if (selectedRecords.length === 0) {
     const empty = document.createElement("p");
@@ -236,9 +287,20 @@ function renderDetail() {
     const row = document.createElement("div");
     row.className = "record-row";
 
+    const timeWrap = document.createElement("span");
+    timeWrap.className = "record-time-wrap";
+
     const time = document.createElement("span");
     time.className = "record-time";
     time.textContent = record.time;
+    timeWrap.append(time);
+
+    if (record.manual) {
+      const manual = document.createElement("span");
+      manual.className = "manual-label";
+      manual.textContent = "（手動追加）";
+      timeWrap.append(manual);
+    }
 
     const button = document.createElement("button");
     button.type = "button";
@@ -246,7 +308,7 @@ function renderDetail() {
     button.textContent = "削除";
     button.addEventListener("click", () => deleteRecord(record.id));
 
-    row.append(time, button);
+    row.append(timeWrap, button);
     els.recordList.append(row);
   });
 }

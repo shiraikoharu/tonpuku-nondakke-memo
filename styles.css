@@ -314,6 +314,43 @@ select {
   font-weight: 800;
 }
 
+.count-adjust {
+  display: grid;
+  grid-template-columns: 48px minmax(72px, 1fr) 48px;
+  align-items: center;
+  gap: 10px;
+  width: min(100%, 230px);
+  margin: 12px auto 14px;
+  padding: 8px;
+  background: #fff8f6;
+  border: 1px solid var(--line);
+  border-radius: 18px;
+}
+
+.adjust-button {
+  width: 48px;
+  height: 44px;
+  color: var(--pink-dark);
+  background: var(--pink-soft);
+  border: 1px solid #f0cad1;
+  border-radius: 15px;
+  font-size: 24px;
+  font-weight: 900;
+  line-height: 1;
+}
+
+.adjust-button:disabled {
+  color: #c7aeb3;
+  background: #f7eeee;
+}
+
+.adjust-count {
+  color: var(--ink);
+  font-size: 18px;
+  font-weight: 900;
+  text-align: center;
+}
+
 .record-list {
   display: grid;
   gap: 8px;
@@ -340,6 +377,19 @@ select {
 .record-time {
   font-size: 19px;
   font-weight: 900;
+}
+
+.record-time-wrap {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 2px;
+}
+
+.manual-label {
+  color: #b49399;
+  font-size: 12px;
+  font-weight: 800;
 }
 
 .delete-button {
