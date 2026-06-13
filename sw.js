@@ -1,10 +1,11 @@
-const CACHE_NAME = "tonpuku-count-memo-cache-v5";
+const CACHE_NAME = "tonpuku-count-memo-cache-v6";
 const ASSETS = [
   "./",
   "./index.html",
-  "./styles.css",
-  "./app.js",
-  "./manifest.json",
+  "./index.html?v=6",
+  "./styles.css?v=6",
+  "./app.js?v=6",
+  "./manifest.json?v=6",
   "./icon-512.png"
 ];
 
@@ -33,6 +34,8 @@ self.addEventListener("fetch", (event) => {
   const isFreshFirst =
     event.request.mode === "navigate"
     || requestUrl.pathname.endsWith("/index.html")
+    || requestUrl.pathname.endsWith("/styles.css")
+    || requestUrl.pathname.endsWith("/app.js")
     || requestUrl.pathname.endsWith("/manifest.json")
     || requestUrl.pathname.endsWith("/sw.js");
 
