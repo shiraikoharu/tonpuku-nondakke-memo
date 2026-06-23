@@ -193,11 +193,11 @@ function renderToday() {
   const todaysRecords = recordsForDate(today);
   const limit = state.settings.dailyLimit;
   const remaining = limit - todaysRecords.length;
-  const last = todaysRecords[todaysRecords.length - 1];
+  const lastTimedRecord = [...todaysRecords].reverse().find((record) => record.manual !== true);
 
   els.todayDate.textContent = formatJapaneseDate(today);
   els.todayCount.textContent = `${todaysRecords.length}回`;
-  els.lastTime.textContent = last ? last.time : "--:--";
+  els.lastTime.textContent = lastTimedRecord ? lastTimedRecord.time : "--:--";
   els.remainingText.classList.toggle("is-limit", remaining <= 0);
 
   if (remaining > 0) {
@@ -292,10 +292,10 @@ function renderDetail() {
 
     const time = document.createElement("span");
     time.className = "record-time";
-    time.textContent = record.time;
+    time.textContent = record.manual === true ? "1回" : record.time;
     timeWrap.append(time);
 
-    if (record.manual) {
+    if (record.manual === true) {
       const manual = document.createElement("span");
       manual.className = "manual-label";
       manual.textContent = "（手動追加）";
