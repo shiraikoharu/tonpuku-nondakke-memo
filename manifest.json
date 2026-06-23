@@ -2,7 +2,7 @@
   "name": "頓服飲んだっけメモ",
   "short_name": "頓服飲んだっけメモ",
   "description": "飲んだ回数と時刻をすぐ確認するためのPWAメモアプリです。",
-  "start_url": "./index.html?v=10",
+  "start_url": "./index.html?v=11",
   "scope": "./",
   "display": "standalone",
   "background_color": "#fbf4e8",

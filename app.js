@@ -292,15 +292,8 @@ function renderDetail() {
 
     const time = document.createElement("span");
     time.className = "record-time";
-    time.textContent = record.manual === true ? "1回" : record.time;
+    time.textContent = record.manual === true ? "手動追加" : record.time;
     timeWrap.append(time);
-
-    if (record.manual === true) {
-      const manual = document.createElement("span");
-      manual.className = "manual-label";
-      manual.textContent = "（手動追加）";
-      timeWrap.append(manual);
-    }
 
     const button = document.createElement("button");
     button.type = "button";

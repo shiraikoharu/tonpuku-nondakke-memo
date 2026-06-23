@@ -1,11 +1,11 @@
-const CACHE_NAME = "tonpuku-count-memo-cache-v10";
+const CACHE_NAME = "tonpuku-count-memo-cache-v11";
 const ASSETS = [
   "./",
   "./index.html",
-  "./index.html?v=10",
-  "./styles.css?v=10",
-  "./app.js?v=10",
-  "./manifest.json?v=10",
+  "./index.html?v=11",
+  "./styles.css?v=11",
+  "./app.js?v=11",
+  "./manifest.json?v=11",
   "./icon-512.png"
 ];
 
